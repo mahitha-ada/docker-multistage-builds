@@ -1,0 +1,128 @@
+name: Build and Test Docker Images
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-nodejs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build traditional image
+        run: |
+          cd nodejs
+          docker build -t nodejs-traditional -f Dockerfile .
+      
+      - name: Build multi-stage image
+        run: |
+          cd nodejs
+          docker build -t nodejs-multistage -f Dockerfile.secure .
+      
+      - name: Compare image sizes
+        run: |
+          echo "Image size comparison:"
+          docker images nodejs-traditional --format "{{.Repository}}: {{.Size}}"
+          docker images nodejs-multistage --format "{{.Repository}}: {{.Size}}"
+      
+      - name: Test the application
+        run: |
+          cd nodejs
+          docker run -d -p 3000:3000 --name nodejs-app nodejs-multistage
+          sleep 5
+          curl -s http://localhost:3000 | grep "Node.js Multi-Stage Build Example"
+          docker stop nodejs-app
+          docker rm nodejs-app
+
+  build-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build traditional image
+        run: |
+          cd python
+          docker build -t python-traditional -f Dockerfile .
+      
+      - name: Build multi-stage image
+        run: |
+          cd python
+          docker build -t python-multistage -f Dockerfile.secure .
+      
+      - name: Compare image sizes
+        run: |
+          echo "Image size comparison:"
+          docker images python-traditional --format "{{.Repository}}: {{.Size}}"
+          docker images python-multistage --format "{{.Repository}}: {{.Size}}"
+      
+      - name: Test the application
+        run: |
+          cd python
+          docker run -d -p 8000:8000 --name python-app python-multistage
+          sleep 5
+          curl -s http://localhost:8000 | grep "Python Multi-Stage Build Example"
+          docker stop python-app
+          docker rm python-app
+
+  build-java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build traditional image
+        run: |
+          cd java
+          docker build -t java-traditional -f Dockerfile .
+      
+      - name: Build multi-stage image
+        run: |
+          cd java
+          docker build -t java-multistage -f Dockerfile.secure .
+      
+      - name: Compare image sizes
+        run: |
+          echo "Image size comparison:"
+          docker images java-traditional --format "{{.Repository}}: {{.Size}}"
+          docker images java-multistage --format "{{.Repository}}: {{.Size}}"
+      
+      - name: Test the application
+        run: |
+          cd java
+          docker run -d -p 8080:8080 --name java-app java-multistage
+          sleep 10
+          curl -s http://localhost:8080 | grep "Java Multi-Stage Build Example"
+          docker stop java-app
+          docker rm java-app
+
+  build-golang:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build traditional image
+        run: |
+          cd golang
+          docker build -t golang-traditional -f Dockerfile .
+      
+      - name: Build multi-stage image
+        run: |
+          cd golang
+          docker build -t golang-multistage -f Dockerfile.secure .
+      
+      - name: Compare image sizes
+        run: |
+          echo "Image size comparison:"
+          docker images golang-traditional --format "{{.Repository}}: {{.Size}}"
+          docker images golang-multistage --format "{{.Repository}}: {{.Size}}"
+      
+      - name: Test the application
+        run: |
+          cd golang
+          docker run -d -p 8080:8080 --name golang-app golang-multistage
+          sleep 5
+          curl -s http://localhost:8080 | grep "Go Multi-Stage Build Example"
+          docker stop golang-app
+          docker rm golang-app

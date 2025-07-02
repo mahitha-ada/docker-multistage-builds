@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-multistage-example",
+  "version": "1.0.0",
+  "description": "Node.js example for Docker multi-stage builds",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "build": "mkdir -p dist && cp -r src/* dist/ && echo 'Build completed'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "docker",
+    "multistage",
+    "nodejs",
+    "example"
+  ],
+  "author": "Mahitha Adapa",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

@@ -1,0 +1,23 @@
+# Multi-stage build - Build stage
+FROM golang:1.20 AS builder
+
+WORKDIR /app
+
+# Copy go mod files for better layer caching
+COPY go.mod ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build statically linked binary
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o app .
+
+# Production stage - using scratch (minimal possible image)
+FROM scratch
+
+# Copy only the binary from builder
+COPY --from=builder /app/app /app
+
+EXPOSE 8081
+CMD ["/app"]

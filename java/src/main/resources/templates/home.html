@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Java Multi-Stage Build Example</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        .container { border: 1px solid #ddd; padding: 20px; border-radius: 5px; }
+        .item { margin-bottom: 10px; padding: 10px; background-color: #f9f9f9; border-radius: 3px; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Java Multi-Stage Build Example</h1>
+    <div class="container">
+        <h2>API Endpoints:</h2>
+        <ul>
+            <li>GET /api/items - List all items</li>
+            <li>GET /api/items/{id} - Get a specific item</li>
+            <li>POST /api/items - Create a new item</li>
+        </ul>
+        
+        <h2>Current Items:</h2>
+        <div id="items">
+            <div class="item" th:each="item : ${items}">
+                <strong th:text="${item.name}">Item name</strong>: <span th:text="${item.description}">Description</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Docker Multi-Stage Build Example | Running in a container</p>
+        <p>Environment: <span th:text="${@environment.getProperty('spring.profiles.active', 'default')}">default</span></p>
+    </div>
+</body>
+</html>
